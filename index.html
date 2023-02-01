@@ -11,16 +11,16 @@
 	<a href="#content" class="sr-hidden">Skip to content</a>
 	<header class="siteHeader">
 		<nav role="navigation">
-			<a href="./" class="siteBrand">Verdens Bedste Hjemmeside</a>
+			<a href="./" class="siteBrand" onclick="route()">Verdens Bedste Hjemmeside</a>
 			<ul class="primaryNavigation">
-				<li class="primaryNavigation__navigationItem"><a href="#!">Link 1</a></li>
-				<li class="primaryNavigation__navigationItem"><a href="#!">Link 2</a></li>
-				<li class="primaryNavigation__navigationItem"><a href="#!">Link 3</a></li>
+				<li class="primaryNavigation__navigationItem"><a href="/page1" onclick="route()">Link 1</a></li>
+				<li class="primaryNavigation__navigationItem"><a href="/page2" onclick="route()">Link 2</a></li>
+				<li class="primaryNavigation__navigationItem"><a href="/page3" onclick="route()">Link 3</a></li>
 			</ul>
 		</nav>
 	</header>
 
-	<main role="main"></main>
+	<main role="main" id="main"></main>
 
 	<footer class="siteFooter" role="contentinfo">
 		<section class="siteFooter__section siteFooter__quote">
@@ -48,5 +48,32 @@
 			</ul>
 		</section>
 	</footer>
+
+	<script>
+		const route = (event) => {
+			event = event || window.event;
+			event.preventDefault();
+			window.history.pushState({}, "",event.target.href);
+			handleLocation()
+		};
+
+		const routes = {
+			
+			"/": "/index.html",
+			"/page1": "/page1.html",
+			"/page2": "/page2.html",
+			"/page3": "/page3.html",
+		};
+
+		const handleLocation = async () => {
+			const path = window.location.pathname;
+			const route = routes[path] || routes[404];
+			const html = await fetch(route).then((data => data.text()));
+			document.getElementById("main").innerHTML = html;
+		}
+
+		window.onpopstate = handleLocation;
+		window.route = route;
+	</script>
 </body>
 </html>
